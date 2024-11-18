@@ -20,8 +20,12 @@ func doThingWithLogs() error {
     err := skipLevel()
 
     // args will be a list of kv pairs ["kv_present", true]
-    args := YoinkArgs(err) 
+    args := kverr.YoinkArgs(err) 
     logger.Error("had an error", args...)
+
+    // could also copy the map:
+    m := kverr.Map(err)
+    logger.Error("unexpected internal state", "got_kv_error", m["kv_error"])
 }
 
 
