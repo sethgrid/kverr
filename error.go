@@ -30,6 +30,11 @@ func (e *Error) Error() string {
 	return fmt.Sprintf("%v", e.kv)
 }
 
+// Unwrap() implements the errors.Wrapper interface
+func (e *Error) Unwrap() error {
+	return e.Err
+}
+
 // New function to create a new Error with a variadic list of key-value pairs that can later be extracted for logging and monitoring.
 // If an underlying kverr Error is found, the keyValues from that error are lifted into the new Error ensuring no kv pair loss when
 // wrapping multiple layers of errors. It is up to the implementer to ensure that all keys have a matching pair.
