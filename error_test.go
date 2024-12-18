@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+var rootErr = fmt.Errorf("root error")
 
 func TestKVErr(t *testing.T) {
 	err := skipLevelKVErr()
@@ -21,6 +24,8 @@ func TestKVErrAppend(t *testing.T) {
 	err := skipLevelKVErr()
 	err = New(fmt.Errorf("wrap some more: %w", err), "another_key", "another_value")
 	err = fmt.Errorf("another wrap for good measure: %w", err)
+
+	assert.True(t, errors.Is(err, rootErr))
 
 	args := YoinkArgs(err)
 	require.Len(t, args, 4)
@@ -39,5 +44,5 @@ func skipLevelKVErr() error {
 }
 
 func returnKVErr() error {
-	return New(fmt.Errorf("root error"), "kv_present", true)
+	return New(rootErr, "kv_present", true)
 }
